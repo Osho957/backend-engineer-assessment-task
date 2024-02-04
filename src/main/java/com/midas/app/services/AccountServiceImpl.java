@@ -6,7 +6,9 @@ import com.midas.app.workflows.CreateAccountWorkflow;
 import com.stripe.exception.StripeException;
 import io.temporal.client.WorkflowClient;
 import io.temporal.client.WorkflowOptions;
+import io.temporal.common.RetryOptions;
 import io.temporal.workflow.Workflow;
+import java.time.Duration;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -20,6 +22,13 @@ public class AccountServiceImpl implements AccountService {
   private final WorkflowClient workflowClient;
 
   private final AccountRepository accountRepository;
+  private final RetryOptions retryoptions =
+      RetryOptions.newBuilder()
+          .setInitialInterval(Duration.ofSeconds(1))
+          .setMaximumInterval(Duration.ofSeconds(100))
+          .setBackoffCoefficient(2)
+          .setMaximumAttempts(50000)
+          .build();
 
   /**
    * createAccount creates a new account in the system or provider.
@@ -33,6 +42,7 @@ public class AccountServiceImpl implements AccountService {
         WorkflowOptions.newBuilder()
             .setTaskQueue(CreateAccountWorkflow.QUEUE_NAME)
             .setWorkflowId(details.getEmail())
+            .setRetryOptions(retryoptions)
             .build();
 
     logger.info("initiating workflow to create account for email: {}", details.getEmail());
@@ -49,6 +59,10 @@ public class AccountServiceImpl implements AccountService {
    */
   @Override
   public List<Account> getAccounts() {
+    /* Account account =
+        Account.builder().firstName("test").lastName("test").email("test@gmail.com").build();
+    accountRepository.save(account);
+     */
     return accountRepository.findAll();
   }
 }
