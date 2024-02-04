@@ -1,11 +1,12 @@
 # Getting Started
 
-**IMPORTANT: Do not send pull requests to this repository. This is a template repository and is not used for grading. Any pull requests will be closed and ignored.**
-
 ## Introduction
 
-If you are reading this, you are probably have received this project as a coding challenge. Please read the instructions
-carefully and follow the steps below to get started.
+Integrated Stripe With The Spring Boot Application Provided
+The Flow Gets Active When The Create Account Api Is Called It calls AccountService
+createAccount Method where it creates a workflow for temporal and that workflow
+calls the Stripe Create Customer Api which generates a id and that is kept in a field
+provider id after setting all these details the account details are being saved in database.
 
 ## Setup
 
@@ -49,8 +50,7 @@ Please check the official documentation for the installation of Java, Temporal, 
 
 ### Stripe API Keys
 
-Sign up for a Stripe account and get your API keys from the [Stripe Dashboard](https://dashboard.stripe.com/apikeys).
-Then in `application.properties` file add the following line with your secret key.
+Added Stripe Developer Api Key As Asked in Problem Statement
 
 ```properties
 stripe.api-key=sk_test_51J3j
